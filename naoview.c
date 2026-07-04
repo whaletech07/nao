@@ -172,24 +172,17 @@ void render_naoview(struct nk_context* ctx, int* active_drag_window_id) {
             mini_snprintf(info_text, sizeof(info_text), "Source: %s [%dx%d]", naoview_current_file, naoview_width, naoview_height);
             nk_label(ctx, info_text, NK_TEXT_LEFT);
 
-            // Calculate scaled dimensions to fit within window (aspect ratio preserved)
-            float img_aspect = (float)naoview_width / (float)naoview_height;
-            int avail_width = 470;  // Window width minus padding
-            int avail_height = 380; // Window height minus text and padding
-            
-            int scaled_w, scaled_h;
-            if (img_aspect > (float)avail_width / (float)avail_height) {
-                // Width-constrained
-                scaled_w = avail_width;
-                scaled_h = (int)((float)avail_width / img_aspect);
-            } else {
-                // Height-constrained
-                scaled_h = avail_height;
-                scaled_w = (int)((float)avail_height * img_aspect);
+            // Use the current window height so the image panel fills the available
+            // space and the vertical scrollbar reaches the bottom of the window.
+            struct nk_vec2 window_size = nk_window_get_size(ctx);
+            int image_view_height = (int)window_size.y - 80;
+            if (image_view_height < 120) image_view_height = 120;
+            nk_layout_row_dynamic(ctx, (float)image_view_height, 1);
+            if (nk_group_begin(ctx, "NaoViewImageGroup", NK_WINDOW_SCROLL_AUTO_HIDE)) {
+                nk_layout_row_static(ctx, (float)naoview_height, naoview_width, 1);
+                nk_image(ctx, naoview_img);
+                nk_group_end(ctx);
             }
-            
-            nk_layout_row_static(ctx, (float)scaled_h, scaled_w, 1);
-            nk_image(ctx, naoview_img);
         } else {
             nk_layout_row_dynamic(ctx, 100, 1);
             nk_label(ctx, "No picture loaded. Go to File > Open PNG...", NK_TEXT_CENTERED);

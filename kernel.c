@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdarg.h>
 #include "font.h"
 #include "ff.h"
 #include "boot_screen.h"
@@ -11,12 +12,13 @@
 #include "lwip/icmp.h"
 #include "lwip/raw.h"
 #include "lwip/inet_chksum.h" // <-- CRITICAL FIX 1: Resolves inet_chksum warning
-extern void render_naoview(struct nk_context* ctx, int* active_drag_window_id);
-// Global declarations to prevent scope compilation issues
-extern void netif_driver_poll(struct netif *netif);
 // Forward declarations for Nuklear structures and hooks
 #define NK_PRIVATE
 #include "nuklear.h"
+
+// Global declarations to prevent scope compilation issues
+extern void render_naoview(struct nk_context* ctx, int* active_drag_window_id);
+extern void netif_driver_poll(struct netif *netif);
 
 extern char keyboard_pop_char(void);
 extern uint32_t* gfx_framebuffer;

@@ -6,8 +6,8 @@ extern void serial_printf(const char* format, ...);
 // Define an 8-byte alignment rule for modern CPU architecture efficiency
 #define ALIGN(size) (((size) + 7) & ~7)
 
-// 1 Megabyte managed heap space inside the BSS data segment
-static uint8_t kernel_heap_space[1024 * 1024];
+// 4 Megabyte managed heap space inside the BSS data segment
+static uint8_t kernel_heap_space[4 * 1024 * 1024];
 
 struct block_header {
     uint32_t size;     // Size of the usable data block trailing this header
